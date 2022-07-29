@@ -1,5 +1,53 @@
 <template>
-    <template if:true={hasAccountData}>
-        <p>{name} {number}</p>
-    </template>
+    <div class="slds-box slds-theme_default">
+        <div class="slds-box slds-clearfix">
+            <div class="slds-float_left">
+                <template if:true={hasAccountData}>
+                    <span class="slds-text-heading_small">{name} {number}</span>
+                </template>
+                <template if:false={hasAccountData}>
+                    <span class="slds-text-heading_small">Loading</span>
+                </template>
+            </div>
+            <div class="slds-float_right">
+                <lightning-button label="Create Product"></lightning-button>
+                <lightning-button label="Cart"></lightning-button>
+            </div>
+        </div>
+        <div class="slds-grid slds-wrap slds-box">
+            <div class="slds-col slds-size_1-of-3">
+                <div class="slds-text-heading_small slds-text-align_center">Filter</div>
+                <div>
+                    <span class="slds-text-heading_small">Type:</span>
+                    <template for:each={types} for:item="type">
+                        <lightning-input key={type.id} type="checkbox" label={type.Name} name="type.Name"></lightning-input>
+                    </template>
+                </div>
+                <div>
+                    <span class="slds-text-heading_small">Family:</span>
+                    <template for:each={families} for:item="family">
+                        <lightning-input key={family.id} type="checkbox" label={family.Name} name="family.Name"></lightning-input>
+                    </template>
+                </div>
+            </div>
+
+            <div class="slds-col slds-size_2-of-3">
+                <lightning-input placeholder="Search" class="slds-var-m-horizontal_small"></lightning-input>
+                <div class="slds-grid slds-wrap">
+                    <template for:each={products} for:item="product">
+                        <lightning-card class="slds-size_1-of-2 slds-var-p-around_small" key={product.id}>
+                            <span class="slds-text-heading_small slds-align_absolute-center"> {product.Name} </span>
+                            <p class="slds-var-m-around_small">{product.Description}</p>
+                            <div class="slds-clearfix">
+                                <lightning-button class="slds-var-m-around_small slds-float_left" label="Details">
+                                </lightning-button>
+                                <lightning-button class="slds-var-m-around_small slds-float_right" label="Add">
+                                </lightning-button>
+                            </div>
+                        </lightning-card>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
