@@ -55,7 +55,8 @@ public with sharing class ProductLoader {
                 SELECT Id, Name, Description__c, Type__c, Family__c
                 FROM Product__c
                 WHERE
-                    Name LIKE :searchString
+                    (Name LIKE :searchString
+                    OR Description__c LIKE :searchString)
                     AND Type__c LIKE :selectedType
                     AND Family__c LIKE :selectedFamily
             ];
