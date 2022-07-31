@@ -19,6 +19,11 @@ export default class OrderManagement extends LightningElement {
 
     products;
 
+    showDetailsModal = false;
+    showCartModal = false;
+
+    currentProductId;
+
     @wire(CurrentPageReference)
     handleResult({ state }) {
         if (state) {
@@ -95,6 +100,22 @@ export default class OrderManagement extends LightningElement {
             this.selectedType,
             this.selectedFamily
         );
+    }
+
+    openDetails(event) {
+        this.currentProductId = event.target.dataset.id;
+        this.showDetailsModal = true;
+    }
+    closeDetails() {
+        this.showDetailsModal = false;
+    }
+
+    openCart(event) {
+        console.log(event);
+        this.showCartModal = true;
+    }
+    closeCart() {
+        this.showCartModal = false;
     }
 
     connectedCallback() {

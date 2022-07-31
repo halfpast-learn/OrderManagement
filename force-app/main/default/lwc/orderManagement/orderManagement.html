@@ -1,4 +1,15 @@
 <template>
+    <template if:true={showDetailsModal}>
+        <c-product-details-modal-window
+            onclosedetails={closeDetails}
+            record-id={currentProductId}
+        ></c-product-details-modal-window>
+    </template>
+    <template if:true={showCartModal}>
+        <c-product-cart-modal-window
+            onclosecart={closeCart}
+        ></c-product-cart-modal-window>
+    </template>
     <div class="slds-box slds-theme_default">
         <div class="slds-box slds-clearfix">
             <div class="slds-float_left">
@@ -11,7 +22,10 @@
             </div>
             <div class="slds-float_right">
                 <lightning-button label="Create Product"></lightning-button>
-                <lightning-button label="Cart"></lightning-button>
+                <lightning-button
+                    label="Cart"
+                    onclick={openCart}
+                ></lightning-button>
             </div>
         </div>
         <div class="slds-grid slds-wrap slds-box">
@@ -64,6 +78,8 @@
                                 <lightning-button
                                     class="slds-var-m-around_small slds-float_left"
                                     label="Details"
+                                    onclick={openDetails}
+                                    data-id={product.Id}
                                 >
                                 </lightning-button>
                                 <lightning-button
