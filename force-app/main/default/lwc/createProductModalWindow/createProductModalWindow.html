@@ -1,0 +1,91 @@
+<template>
+    <section
+        role="dialog"
+        tabindex="-1"
+        aria-labelledby="modal-heading-01"
+        aria-modal="true"
+        aria-describedby="modal-content-id-1"
+        class="slds-modal slds-fade-in-open"
+    >
+        <div class="slds-modal__container">
+            <!-- modal header start -->
+            <header class="slds-modal__header">
+                <button
+                    class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse"
+                    title="Close"
+                    onclick={hideModal}
+                >
+                    <lightning-icon
+                        icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small"
+                    >
+                        <label>Close</label>
+                    </lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2
+                    id="modal-heading-01"
+                    class="slds-text-heading_medium slds-hyphenate"
+                >
+                    Create Product
+                </h2>
+            </header>
+
+            <!-- modal body start -->
+            <div
+                class="slds-modal__content slds-var-p-around_medium"
+                id="modal-content-id-1"
+            >
+                <lightning-input
+                    label="Name"
+                    name="ProductName"
+                    onchange={handleNameChange}
+                ></lightning-input>
+                <lightning-input
+                    label="Description"
+                    name="ProductDescription"
+                    onchange={handleDescriptionChange}
+                ></lightning-input>
+                <lightning-input
+                    label="Type"
+                    name="ProductType"
+                    onchange={handleTypeChange}
+                ></lightning-input>
+                <lightning-input
+                    label="Family"
+                    name="ProductFamily"
+                    onchange={handleFamilyChange}
+                ></lightning-input>
+                <lightning-input
+                    label="Price"
+                    name="ProductPrice"
+                    onchange={handlePriceChange}
+                ></lightning-input>
+                <lightning-input
+                    label="Image"
+                    name="ProductImage"
+                    onchange={handleImageChange}
+                ></lightning-input>
+            </div>
+
+            <!-- modal footer start-->
+            <footer class="slds-modal__footer">
+                <button
+                    class="slds-button slds-button_neutral"
+                    onclick={createProduct}
+                >
+                    Create
+                </button>
+                <button
+                    class="slds-button slds-button_neutral"
+                    onclick={hideModal}
+                >
+                    Cancel
+                </button>
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</template>
