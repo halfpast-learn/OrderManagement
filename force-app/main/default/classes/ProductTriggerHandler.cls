@@ -9,6 +9,7 @@ public with sharing class ProductTriggerHandler {
             updateImages(productIds);
         }
     }
+
     public static void onAfterUpdate(List<Product__c> products) {
         if (!System.isFuture() && !System.isBatch()) {
             List<String> productIds = new List<String>();
