@@ -79,36 +79,38 @@
                     onchange={handleSearchInputChange}
                 ></lightning-input>
                 <div class="slds-grid slds-wrap">
-                    <template for:each={products} for:item="product">
-                        <lightning-card
-                            class="slds-size_1-of-2 slds-var-p-around_small"
-                            key={product.id}
-                        >
-                            <span
-                                class="slds-text-heading_small slds-align_absolute-center"
+                    <template if:true={products}>
+                        <template for:each={products} for:item="product">
+                            <lightning-card
+                                class="slds-size_1-of-2 slds-var-p-around_small"
+                                key={product.Id}
                             >
-                                {product.Name}
-                            </span>
-                            <p class="slds-var-m-around_small">
-                                {product.Description__c}
-                            </p>
-                            <div class="slds-clearfix">
-                                <lightning-button
-                                    class="slds-var-m-around_small slds-float_left"
-                                    label="Details"
-                                    onclick={openDetails}
-                                    data-id={product.Id}
+                                <span
+                                    class="slds-text-heading_small slds-align_absolute-center"
                                 >
-                                </lightning-button>
-                                <lightning-button
-                                    class="slds-var-m-around_small slds-float_right"
-                                    label="Add"
-                                    onclick={addProductToCart}
-                                    data-id={product.Id}
-                                >
-                                </lightning-button>
-                            </div>
-                        </lightning-card>
+                                    {product.Name}
+                                </span>
+                                <p class="slds-var-m-around_small">
+                                    {product.Description__c}
+                                </p>
+                                <div class="slds-clearfix">
+                                    <lightning-button
+                                        class="slds-var-m-around_small slds-float_left"
+                                        label="Details"
+                                        onclick={openDetails}
+                                        data-id={product.Id}
+                                    >
+                                    </lightning-button>
+                                    <lightning-button
+                                        class="slds-var-m-around_small slds-float_right"
+                                        label="Add"
+                                        onclick={addProductToCart}
+                                        data-id={product.Id}
+                                    >
+                                    </lightning-button>
+                                </div>
+                            </lightning-card>
+                        </template>
                     </template>
                 </div>
             </div>
