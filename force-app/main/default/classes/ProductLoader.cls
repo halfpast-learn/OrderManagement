@@ -10,6 +10,7 @@ public with sharing class ProductLoader {
         selectedFamily = selectedFamily == null ? '%' : selectedFamily;
         return new ResultWrapper(searchString, selectedType, selectedFamily);
     }
+
     @AuraEnabled(Cacheable=true)
     public static List<String> getTypePicklistValues() {
         SObjectField typeField = SObjectType.Product__c.fields.Type__c.getSObjectField();
@@ -22,6 +23,7 @@ public with sharing class ProductLoader {
         }
         return entryValues;
     }
+
     @AuraEnabled(Cacheable=true)
     public static List<String> getFamilyPicklistValues() {
         SObjectField familyField = SObjectType.Product__c.fields.Family__c.getSObjectField();
@@ -53,13 +55,6 @@ public with sharing class ProductLoader {
             String selectedType,
             String selectedFamily
         ) {
-            System.debug(
-                searchString +
-                ' ' +
-                selectedType +
-                ' ' +
-                selectedFamily
-            );
             this.products = [
                 SELECT Id, Name, Description__c, Type__c, Family__c
                 FROM Product__c
