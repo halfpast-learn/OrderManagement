@@ -14,6 +14,12 @@
         >
         </c-product-cart-modal-window>
     </template>
+    <template if:true={showCreateProductModal}>
+        <c-create-product-modal-window
+            onclosecreateproduct={closeCreateProductModal}
+        >
+        </c-create-product-modal-window>
+    </template>
     <div class="slds-box slds-theme_default">
         <div class="slds-box slds-clearfix">
             <div class="slds-float_left">
@@ -26,8 +32,10 @@
             </div>
             <div class="slds-float_right">
                 <lightning-button
+                    if:true={isManager}
                     label="Create Product"
                     class="slds-var-m-right_small"
+                    onclick={openCreateProductModal}
                 ></lightning-button>
                 <lightning-button
                     label="Cart"

@@ -9,6 +9,9 @@ import getFamilyPicklistValues from '@salesforce/apex/ProductLoader.getFamilyPic
 
 import NAME_FIELD from '@salesforce/schema/Account.Name';
 import ACCOUNT_NUMBER_FIELD from '@salesforce/schema/Account.AccountNumber';
+import ISMANAGER_FIELD from '@salesforce/schema/User.IsManager__c';
+
+import UserId from '@salesforce/user/Id';
 
 export default class OrderManagement extends LightningElement {
     recordId;
@@ -23,6 +26,7 @@ export default class OrderManagement extends LightningElement {
 
     showDetailsModal = false;
     showCartModal = false;
+    showCreateProductModal = false;
 
     currentProductId;
 
@@ -47,14 +51,22 @@ export default class OrderManagement extends LightningElement {
     @wire(getTypePicklistValues)
     _types;
 
+    @wire(getRecord, { recordId: UserId, fields: ISMANAGER_FIELD })
+    user;
+
+    get isManager() {
+        return getFieldValue(this.user.data, ISMANAGER_FIELD);
+    }
+
+    get hasAccountData() {
+        return this.account && this.account.data;
+    }
+
     get name() {
         return getFieldValue(this.account.data, NAME_FIELD);
     }
     get number() {
         return getFieldValue(this.account.data, ACCOUNT_NUMBER_FIELD);
-    }
-    get hasAccountData() {
-        return this.account && this.account.data;
     }
 
     get types() {
@@ -66,7 +78,6 @@ export default class OrderManagement extends LightningElement {
         }
         return result;
     }
-
     get families() {
         let result = [{ value: '%', label: 'No filter' }];
         if (this._families.data) {
@@ -131,6 +142,13 @@ export default class OrderManagement extends LightningElement {
     clearCart() {
         this.cart = [];
         this.closeCart();
+    }
+
+    openCreateProductModal() {
+        this.showCreateProductModal = true;
+    }
+    closeCreateProductModal() {
+        this.showCreateProductModal = false;
     }
 
     showNotification(title, message, variant = 'info') {
