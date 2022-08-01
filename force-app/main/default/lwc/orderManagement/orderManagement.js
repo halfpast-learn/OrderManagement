@@ -9,6 +9,7 @@ import getFamilyPicklistValues from '@salesforce/apex/ProductLoader.getFamilyPic
 
 import NAME_FIELD from '@salesforce/schema/Account.Name';
 import ACCOUNT_NUMBER_FIELD from '@salesforce/schema/Account.AccountNumber';
+import ID_FIELD from '@salesforce/schema/Account.Id';
 import ISMANAGER_FIELD from '@salesforce/schema/User.IsManager__c';
 
 import UserId from '@salesforce/user/Id';
@@ -41,7 +42,7 @@ export default class OrderManagement extends LightningElement {
 
     @wire(getRecord, {
         recordId: '$recordId',
-        fields: [NAME_FIELD, ACCOUNT_NUMBER_FIELD]
+        fields: [NAME_FIELD, ACCOUNT_NUMBER_FIELD, ID_FIELD]
     })
     account;
 
@@ -67,6 +68,9 @@ export default class OrderManagement extends LightningElement {
     }
     get number() {
         return getFieldValue(this.account.data, ACCOUNT_NUMBER_FIELD);
+    }
+    get accountId() {
+        return getFieldValue(this.account.data, ID_FIELD);
     }
 
     get types() {

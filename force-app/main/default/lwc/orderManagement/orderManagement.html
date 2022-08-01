@@ -7,12 +7,15 @@
         </c-product-details-modal-window>
     </template>
     <template if:true={showCartModal}>
-        <c-product-cart-modal-window
-            onclosecart={closeCart}
-            onclearcart={clearCart}
-            product-ids={cart}
-        >
-        </c-product-cart-modal-window>
+        <template if:true={hasAccountData}>
+            <c-product-cart-modal-window
+                onclosecart={closeCart}
+                onclearcart={clearCart}
+                product-ids={cart}
+                account-id={accountId}
+            >
+            </c-product-cart-modal-window>
+        </template>
     </template>
     <template if:true={showCreateProductModal}>
         <c-create-product-modal-window

@@ -1,10 +1,14 @@
 import { LightningElement, api, wire } from 'lwc';
 
+import { createRecord } from 'lightning/uiRecordApi';
+
 import getProductsById from '@salesforce/apex/ProductLoader.getProductsById';
 
 export default class ProductCartModalWindow extends LightningElement {
     @api productIds;
     total = 0;
+    @api accountId;
+    currentOrderId;
 
     get cartIds() {
         let ids = [];
@@ -38,8 +42,38 @@ export default class ProductCartModalWindow extends LightningElement {
         this.dispatchEvent(new CustomEvent('clearcart'));
         this.total = 0;
     }
-    checkout() {
-        console.log('checkout');
+    async checkout() {
+        await this.createOrder();
+        for (let product of this.products) {
+            this.createOrderItem(
+                product.Name,
+                product.Id,
+                product.Price__c,
+                product.amount
+            );
+        }
+        this.clearCart();
+    }
+    async createOrder() {
+        let fields = {
+            Name: `Order-${Math.random().toString()}`,
+            AccountId__c: this.accountId
+        };
+        let objectRecordDetails = { apiName: 'Order__c', fields };
+        await createRecord(objectRecordDetails).then(
+            (result) => (this.currentOrderId = result.id)
+        );
+    }
+    createOrderItem(name, productId, price, quantity) {
+        let fields = {
+            Name: name,
+            OrderId__c: this.currentOrderId,
+            ProductId__c: productId,
+            Price__c: price,
+            Quantity__c: quantity
+        };
+        let objectRecordDetails = { apiName: 'OrderItem__c', fields };
+        createRecord(objectRecordDetails);
     }
     hideModal() {
         this.dispatchEvent(new CustomEvent('closecart'));
