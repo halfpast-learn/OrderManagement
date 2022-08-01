@@ -1,5 +1,7 @@
 import { LightningElement } from 'lwc';
+
 import { createRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class CreateProductModalWindow extends LightningElement {
     name;
@@ -12,18 +14,23 @@ export default class CreateProductModalWindow extends LightningElement {
     handleNameChange({ target: { value } }) {
         this.name = value;
     }
+
     handleDescriptionChange({ target: { value } }) {
         this.description = value;
     }
+
     handleTypeChange({ target: { value } }) {
         this.type = value;
     }
+
     handleFamilyChange({ target: { value } }) {
         this.family = value;
     }
+
     handlePriceChange({ target: { value } }) {
         this.price = value;
     }
+
     handleImageChange({ target: { value } }) {
         this.image = value;
     }
@@ -39,10 +46,26 @@ export default class CreateProductModalWindow extends LightningElement {
         };
         let objectRecordDetails = { apiName: 'Product__c', fields };
         createRecord(objectRecordDetails)
-            .then((response) => console.log('done' + response))
-            .catch((error) => console.log(error));
+            .then(() => {
+                this.showNotification('Success', 'Product created', 'Success');
+                this.hideModal();
+            })
+            .catch((error) => {
+                this.showNotification('Error', error, 'Error');
+                this.hideModal();
+            });
     }
+
     hideModal() {
         this.dispatchEvent(new CustomEvent('closecreateproduct'));
+    }
+
+    showNotification(title, message, variant = 'info') {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant
+        });
+        this.dispatchEvent(evt);
     }
 }
