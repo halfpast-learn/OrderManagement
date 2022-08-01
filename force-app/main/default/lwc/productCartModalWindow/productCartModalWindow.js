@@ -2,10 +2,13 @@ import { LightningElement, api, wire } from 'lwc';
 
 import { createRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { NavigationMixin } from 'lightning/navigation';
 
 import getProductsById from '@salesforce/apex/ProductLoader.getProductsById';
 
-export default class ProductCartModalWindow extends LightningElement {
+export default class ProductCartModalWindow extends NavigationMixin(
+    LightningElement
+) {
     total = 0;
     currentOrderId;
 
@@ -59,6 +62,17 @@ export default class ProductCartModalWindow extends LightningElement {
         this.dispatchEvent(evt);
     }
 
+    navigateToOrderPage() {
+        this[NavigationMixin.Navigate]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: this.currentOrderId,
+                objectApiName: 'Order__c',
+                actionName: 'view'
+            }
+        });
+    }
+
     createOrderItem(name, productId, price, quantity) {
         let fields = {
             Name: name,
@@ -98,5 +112,6 @@ export default class ProductCartModalWindow extends LightningElement {
         }
         this.clearCart();
         this.showNotification('Success', 'Checkout complete', 'Success');
+        this.navigateToOrderPage();
     }
 }
