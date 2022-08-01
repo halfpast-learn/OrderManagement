@@ -1,14 +1,19 @@
 import { LightningElement, api, wire } from 'lwc';
 
 import { createRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import getProductsById from '@salesforce/apex/ProductLoader.getProductsById';
 
 export default class ProductCartModalWindow extends LightningElement {
-    @api productIds;
     total = 0;
-    @api accountId;
     currentOrderId;
+
+    @api productIds;
+    @api accountId;
+
+    @wire(getProductsById, { ids: '$cartIds' })
+    _products;
 
     get cartIds() {
         let ids = [];
@@ -19,9 +24,6 @@ export default class ProductCartModalWindow extends LightningElement {
         }
         return ids;
     }
-
-    @wire(getProductsById, { ids: '$cartIds' })
-    _products;
 
     get products() {
         let convertedProductIds = JSON.parse(JSON.stringify(this.productIds));
@@ -38,12 +40,51 @@ export default class ProductCartModalWindow extends LightningElement {
         }
         return products;
     }
+
     clearCart() {
         this.dispatchEvent(new CustomEvent('clearcart'));
         this.total = 0;
     }
+
+    hideModal() {
+        this.dispatchEvent(new CustomEvent('closecart'));
+    }
+
+    showNotification(title, message, variant = 'info') {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant
+        });
+        this.dispatchEvent(evt);
+    }
+
+    createOrderItem(name, productId, price, quantity) {
+        let fields = {
+            Name: name,
+            OrderId__c: this.currentOrderId,
+            ProductId__c: productId,
+            Price__c: price,
+            Quantity__c: quantity
+        };
+        let objectRecordDetails = { apiName: 'OrderItem__c', fields };
+        createRecord(objectRecordDetails);
+    }
+
+    async createOrder() {
+        let fields = {
+            Name: `Order-${Math.random().toString()}`,
+            AccountId__c: this.accountId
+        };
+        let objectRecordDetails = { apiName: 'Order__c', fields };
+        await createRecord(objectRecordDetails).then(
+            (result) => (this.currentOrderId = result.id)
+        );
+    }
+
     async checkout() {
         if (this.products.length === 0) {
+            this.showNotification('Info', 'No items in cart');
             return;
         }
         await this.createOrder();
@@ -56,33 +97,6 @@ export default class ProductCartModalWindow extends LightningElement {
             );
         }
         this.clearCart();
-    }
-    async createOrder() {
-        let fields = {
-            Name: `Order-${Math.random().toString()}`,
-            AccountId__c: this.accountId
-        };
-        let objectRecordDetails = { apiName: 'Order__c', fields };
-        await createRecord(objectRecordDetails).then(
-            (result) => (this.currentOrderId = result.id)
-        );
-    }
-    createOrderItem(name, productId, price, quantity) {
-        let fields = {
-            Name: name,
-            OrderId__c: this.currentOrderId,
-            ProductId__c: productId,
-            Price__c: price,
-            Quantity__c: quantity
-        };
-        let objectRecordDetails = { apiName: 'OrderItem__c', fields };
-        createRecord(objectRecordDetails);
-    }
-    hideModal() {
-        this.dispatchEvent(new CustomEvent('closecart'));
-    }
-
-    connectedCallback() {
-        console.log(this.productIds);
+        this.showNotification('Success', 'Checkout complete', 'Success');
     }
 }
