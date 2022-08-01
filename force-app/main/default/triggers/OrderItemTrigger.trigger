@@ -1,7 +1,7 @@
-trigger OrderItemTrigger on OrderItem__c(before insert) {
-    if (Trigger.isBefore) {
+trigger OrderItemTrigger on OrderItem__c(after insert) {
+    if (Trigger.isAfter) {
         if (Trigger.isInsert) {
-            OrderItemTriggerHandler.onBeforeInsert(Trigger.New);
+            OrderItemTriggerHandler.onAfterInsert(Trigger.New);
         }
     }
 }
