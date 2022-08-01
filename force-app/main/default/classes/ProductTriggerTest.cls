@@ -1,5 +1,5 @@
 @isTest
-private class ProductTriggerHandlerTest {
+private class ProductTriggerTest {
     private class RestMock implements HttpCalloutMock {
         public HTTPResponse respond(HTTPRequest req) {
             String fullJson = '{"success": true, "word": "test", "rowcount": 5, "data": [{"id": 3205,"imageurl": "http://www.glyffix.com/Image/ShowUploadedImage/3205"},{"id": 4381,"imageurl": "http://www.glyffix.com/Image/ShowUploadedImage/4381"},{"id": 4382,"imageurl": "http://www.glyffix.com/Image/ShowUploadedImage/4382"},{"id": 5660,"imageurl": "http://www.glyffix.com/Image/ShowUploadedImage/5660"},{"id": 7118,"imageurl": "http://www.glyffix.com/Image/ShowUploadedImage/7118"}],"errormessage": ""}';
