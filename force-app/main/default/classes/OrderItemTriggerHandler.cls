@@ -1,5 +1,8 @@
 public with sharing class OrderItemTriggerHandler {
-    public static void onBeforeInsert(List<OrderItem__c> orderItems) {
+    public static void onAfterInsert(List<OrderItem__c> orderItems) {
+        updateRelatedOrders(orderItems);
+    }
+    static void updateRelatedOrders(List<OrderItem__c> orderItems) {
         List<Id> orderIds = new List<Id>();
         for (OrderItem__c orderItem : orderItems) {
             orderIds.add(orderItem.OrderId__c);
