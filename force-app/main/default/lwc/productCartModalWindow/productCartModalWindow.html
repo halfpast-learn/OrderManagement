@@ -21,8 +21,8 @@
                         variant="inverse"
                         size="small"
                     >
-                        <label>Close</label></lightning-icon
-                    >
+                        <label>Close</label>
+                    </lightning-icon>
                     <span class="slds-assistive-text">Close</span>
                 </button>
                 <h2
@@ -38,16 +38,45 @@
                 class="slds-modal__content slds-var-p-around_medium"
                 id="modal-content-id-1"
             >
-                <p>Cart</p>
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Amount</th>
+                        <th>Total</th>
+                    </tr>
+                    <template if:true={_products.data}>
+                        <template for:each={products} for:item="product">
+                            <tr key={product.Id}>
+                                <td>{product.Name}</td>
+                                <td>{product.Price__c}</td>
+                                <td>{product.amount}</td>
+                                <td>{product.total}</td>
+                            </tr>
+                        </template>
+                    </template>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{total}</td>
+                    </tr>
+                </table>
             </div>
 
             <!-- modal footer start-->
             <footer class="slds-modal__footer">
                 <button
                     class="slds-button slds-button_neutral"
-                    onclick={hideModal}
+                    onclick={checkout}
                 >
-                    Cancel
+                    Checkout
+                </button>
+                <button
+                    class="slds-button slds-button_neutral"
+                    onclick={clearCart}
+                >
+                    Clear
                 </button>
             </footer>
         </div>

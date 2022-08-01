@@ -35,6 +35,15 @@ public with sharing class ProductLoader {
         return entryValues;
     }
 
+    @AuraEnabled(Cacheable=true)
+    public static List<Product__c> getProductsById(List<String> ids) {
+        return [
+            SELECT Id, Name, Type__c, Family__c, Price__c
+            FROM Product__c
+            WHERE Id IN :ids
+        ];
+    }
+
     public class ResultWrapper {
         @AuraEnabled
         public List<Product__c> products;

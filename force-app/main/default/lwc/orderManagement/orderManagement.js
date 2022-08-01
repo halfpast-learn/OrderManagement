@@ -1,6 +1,7 @@
 import { LightningElement, wire } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 import { getFieldValue, getRecord } from 'lightning/uiRecordApi';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 import getProducts from '@salesforce/apex/ProductLoader.getProducts';
 import getTypePicklistValues from '@salesforce/apex/ProductLoader.getTypePicklistValues';
@@ -18,6 +19,7 @@ export default class OrderManagement extends LightningElement {
     selectedFamily = '%';
 
     products;
+    cart = [];
 
     showDetailsModal = false;
     showCartModal = false;
@@ -110,12 +112,34 @@ export default class OrderManagement extends LightningElement {
         this.showDetailsModal = false;
     }
 
-    openCart(event) {
-        console.log(event);
+    openCart() {
         this.showCartModal = true;
     }
     closeCart() {
         this.showCartModal = false;
+    }
+    addProductToCart(event) {
+        let productId = event.target.dataset.id;
+        if (this.cart.some((e) => e.id === productId)) {
+            this.cart.filter((e) => e.id === productId)[0].amount += 1;
+        } else {
+            this.cart.push({ id: productId, amount: 1 });
+        }
+        console.log(this.cart);
+        this.showNotification('Success', 'Product added to cart', 'success');
+    }
+    clearCart() {
+        this.cart = [];
+        this.closeCart();
+    }
+
+    showNotification(title, message, variant = 'info') {
+        const evt = new ShowToastEvent({
+            title: title,
+            message: message,
+            variant: variant
+        });
+        this.dispatchEvent(evt);
     }
 
     connectedCallback() {
