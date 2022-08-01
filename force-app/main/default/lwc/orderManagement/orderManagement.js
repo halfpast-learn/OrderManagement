@@ -1,4 +1,5 @@
 import { LightningElement, wire } from 'lwc';
+
 import { CurrentPageReference } from 'lightning/navigation';
 import { getFieldValue, getRecord } from 'lightning/uiRecordApi';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
@@ -9,13 +10,12 @@ import getFamilyPicklistValues from '@salesforce/apex/ProductLoader.getFamilyPic
 
 import NAME_FIELD from '@salesforce/schema/Account.Name';
 import ACCOUNT_NUMBER_FIELD from '@salesforce/schema/Account.AccountNumber';
-import ID_FIELD from '@salesforce/schema/Account.Id';
 import ISMANAGER_FIELD from '@salesforce/schema/User.IsManager__c';
 
 import UserId from '@salesforce/user/Id';
 
 export default class OrderManagement extends LightningElement {
-    recordId;
+    accountId;
     error;
 
     searchString;
@@ -34,15 +34,15 @@ export default class OrderManagement extends LightningElement {
     @wire(CurrentPageReference)
     handleResult({ state }) {
         if (state) {
-            this.recordId = state.c__recordId;
+            this.accountId = state.c__recordId;
         } else {
             this.error = 'error';
         }
     }
 
     @wire(getRecord, {
-        recordId: '$recordId',
-        fields: [NAME_FIELD, ACCOUNT_NUMBER_FIELD, ID_FIELD]
+        recordId: '$accountId',
+        fields: [NAME_FIELD, ACCOUNT_NUMBER_FIELD]
     })
     account;
 
@@ -66,11 +66,9 @@ export default class OrderManagement extends LightningElement {
     get name() {
         return getFieldValue(this.account.data, NAME_FIELD);
     }
+
     get number() {
         return getFieldValue(this.account.data, ACCOUNT_NUMBER_FIELD);
-    }
-    get accountId() {
-        return getFieldValue(this.account.data, ID_FIELD);
     }
 
     get types() {
@@ -82,6 +80,7 @@ export default class OrderManagement extends LightningElement {
         }
         return result;
     }
+
     get families() {
         let result = [{ value: '%', label: 'No filter' }];
         if (this._families.data) {
@@ -92,7 +91,7 @@ export default class OrderManagement extends LightningElement {
         return result;
     }
 
-    handleInputChange({ detail: { value } }) {
+    handleSearchInputChange({ detail: { value } }) {
         this.searchString = value;
         this.loadProducts(
             this.searchString,
@@ -123,6 +122,7 @@ export default class OrderManagement extends LightningElement {
         this.currentProductId = event.target.dataset.id;
         this.showDetailsModal = true;
     }
+
     closeDetails() {
         this.showDetailsModal = false;
     }
@@ -130,9 +130,11 @@ export default class OrderManagement extends LightningElement {
     openCart() {
         this.showCartModal = true;
     }
+
     closeCart() {
         this.showCartModal = false;
     }
+
     addProductToCart(event) {
         let productId = event.target.dataset.id;
         if (this.cart.some((e) => e.id === productId)) {
@@ -143,6 +145,7 @@ export default class OrderManagement extends LightningElement {
         console.log(this.cart);
         this.showNotification('Success', 'Product added to cart', 'success');
     }
+
     clearCart() {
         this.cart = [];
         this.closeCart();
@@ -151,6 +154,7 @@ export default class OrderManagement extends LightningElement {
     openCreateProductModal() {
         this.showCreateProductModal = true;
     }
+
     closeCreateProductModal() {
         this.showCreateProductModal = false;
     }
