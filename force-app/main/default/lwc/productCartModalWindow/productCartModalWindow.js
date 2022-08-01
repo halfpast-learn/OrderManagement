@@ -43,6 +43,9 @@ export default class ProductCartModalWindow extends LightningElement {
         this.total = 0;
     }
     async checkout() {
+        if (this.products.length === 0) {
+            return;
+        }
         await this.createOrder();
         for (let product of this.products) {
             this.createOrderItem(
